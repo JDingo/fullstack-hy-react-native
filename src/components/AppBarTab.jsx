@@ -1,4 +1,5 @@
-import { Pressable, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
+import { Link } from "react-router-native";
 import Text from "./Text";
 
 const styles = StyleSheet.create({
@@ -7,18 +8,14 @@ const styles = StyleSheet.create({
   },
 });
 
-const AppBarTab = ({ text }) => {
+const AppBarTab = ({ text, url }) => {
   return (
-    <Pressable style={styles.container} onPress={onPressFunction}>
+    <Link to={url} style={styles.container}>
       <Text color={"white"} fontSize={"subheading"} fontWeight={"bold"}>
         {text}
       </Text>
-    </Pressable>
+    </Link>
   );
-};
-
-const onPressFunction = (event) => {
-  console.log(`Event press: ${event}`);
 };
 
 export default AppBarTab;
