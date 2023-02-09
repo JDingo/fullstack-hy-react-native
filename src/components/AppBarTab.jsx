@@ -8,9 +8,9 @@ const styles = StyleSheet.create({
   },
 });
 
-const AppBarTab = ({ text, url }) => {
+const AppBarTab = ({ text, url, onPress = null }) => {
   return (
-    <Link to={url} style={styles.container}>
+    <Link to={url} onPress={onPress} style={styles.container}>
       <Text color={"white"} fontSize={"subheading"} fontWeight={"bold"}>
         {text}
       </Text>
