@@ -4,24 +4,39 @@ import RepositoryItem from "./RepositoryItem";
 import { useNavigate } from "react-router-native";
 import { useState } from "react";
 import { Picker } from "@react-native-picker/picker";
+import { Searchbar } from "react-native-paper";
+import { useDebounce } from "use-debounce";
 
 const styles = StyleSheet.create({
   separator: {
     height: 10,
   },
   sortingTab: {
+    marginBottom: 10,
+    marginLeft: 10,
+    marginRight: 10,
+  },
+  searchBar: {
     margin: 10,
   },
 });
 
 const ItemSeparator = () => <View style={styles.separator} />;
 
-export const RepositoryListContainer = ({ repositories, order, setOrder }) => {
+export const RepositoryListContainer = ({
+  repositories,
+  order,
+  setOrder,
+  searchQuery,
+  setSearchQuery,
+}) => {
+  const onChangeSearch = (query) => setSearchQuery(query);
+
+  const navigate = useNavigate();
+
   const repositoryNodes = repositories
     ? repositories.edges.map((edge) => edge.node)
     : [];
-
-  const navigate = useNavigate();
 
   return (
     <FlatList
@@ -29,6 +44,12 @@ export const RepositoryListContainer = ({ repositories, order, setOrder }) => {
       ItemSeparatorComponent={ItemSeparator}
       ListHeaderComponent={
         <View>
+          <Searchbar
+            placeholder="Search"
+            onChangeText={(query) => onChangeSearch(query)}
+            value={searchQuery}
+            style={styles.searchBar}
+          ></Searchbar>
           <Picker
             selectedValue={order}
             onValueChange={(itemValue) => setOrder(itemValue)}
@@ -65,13 +86,19 @@ export const RepositoryListContainer = ({ repositories, order, setOrder }) => {
 
 const RepositoryList = () => {
   const [order, setOrder] = useState("CREATED_AT");
-  const { repositories } = useRepositories(order);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
+
+  const { repositories } = useRepositories(order, debouncedSearchQuery);
 
   return (
     <RepositoryListContainer
       repositories={repositories}
       order={order}
       setOrder={setOrder}
+      searchQuery={searchQuery}
+      setSearchQuery={setSearchQuery}
     ></RepositoryListContainer>
   );
 };
