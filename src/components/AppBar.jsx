@@ -29,6 +29,7 @@ const AppBar = () => {
         {id && username ? (
           <>
             <AppBarTab text={"Create Review"} url="/createReview"></AppBarTab>
+            <AppBarTab text={"My Reviews"} url="/myReviews"></AppBarTab>
             <AppBarTab text={"Sign Out"} onPress={signOut}></AppBarTab>
           </>
         ) : (

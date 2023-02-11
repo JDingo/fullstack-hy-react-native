@@ -27,10 +27,35 @@ query Query($orderBy: AllRepositoriesOrderBy, $orderDirection: OrderDirection, $
 `;
 
 export const GET_ME = gql`
-  {
+  query getCurrentUser($includeReviews: Boolean = false) {
     me {
       id
       username
+      reviews @include(if: $includeReviews) {
+        totalCount
+        pageInfo {
+          endCursor
+          hasNextPage
+          startCursor
+        }
+        edges {
+          cursor
+          node {
+            repositoryId
+            text
+            rating
+            id
+            createdAt
+            user {
+              username
+            }
+            repository {
+              ownerName
+              name
+            }
+          }
+        }
+      }
     }
   }
 `;
