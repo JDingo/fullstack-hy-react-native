@@ -29,6 +29,7 @@ export const RepositoryListContainer = ({
   setOrder,
   searchQuery,
   setSearchQuery,
+  onEndReach,
 }) => {
   const onChangeSearch = (query) => setSearchQuery(query);
 
@@ -80,6 +81,8 @@ export const RepositoryListContainer = ({
         </Pressable>
       )}
       keyExtractor={(item) => item.id}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
     />
   );
 };
@@ -90,7 +93,15 @@ const RepositoryList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const { repositories } = useRepositories(order, debouncedSearchQuery);
+  const { repositories, fetchMore } = useRepositories({
+    order,
+    debouncedSearchQuery,
+    first: 8,
+  });
+
+  const onEndReach = () => {
+    fetchMore();
+  };
 
   return (
     <RepositoryListContainer
@@ -99,6 +110,7 @@ const RepositoryList = () => {
       setOrder={setOrder}
       searchQuery={searchQuery}
       setSearchQuery={setSearchQuery}
+      onEndReach={onEndReach}
     ></RepositoryListContainer>
   );
 };

@@ -18,7 +18,11 @@ export const RepositoryView = () => {
   });
 
   const { repositoryId } = useParams();
-  const { repository } = useRepository({ repositoryId });
+  const { repository, fetchMore } = useRepository({ repositoryId, first: 8 });
+
+  const onEndReach = () => {
+    fetchMore();
+  };
 
   const reviewNodes = repository?.reviews
     ? repository.reviews.edges.map((edge) => edge.node)
@@ -38,6 +42,8 @@ export const RepositoryView = () => {
           <ItemSeparator></ItemSeparator>
         </>
       )}
+      onEndReached={onEndReach}
+      onEndReachedThreshold={0.5}
     />
   ) : (
     <View></View>
