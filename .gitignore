@@ -16,3 +16,4 @@ web-build/
 *-workspace
 
 .env
+.prettierignore
