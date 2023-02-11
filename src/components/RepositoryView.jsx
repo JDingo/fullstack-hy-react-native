@@ -1,18 +1,47 @@
-import { View } from "react-native";
+import { FlatList, View } from "react-native";
+import { StyleSheet } from "react-native-web";
 import { useParams } from "react-router-native";
 import useRepository from "../hooks/useRepository";
+import theme from "../theme";
 import RepositoryItem from "./RepositoryItem";
+import ReviewItem from "./ReviewItem";
 
 export const RepositoryView = () => {
-  const { repositoryId } = useParams();
+  const styles = StyleSheet.create({
+    container: {
+      backgroundColor: theme.colors.white,
+      padding: 20,
+    },
+    separator: {
+      height: 10,
+    },
+  });
 
+  const { repositoryId } = useParams();
   const { repository } = useRepository({ repositoryId });
 
+  const reviewNodes = repository?.reviews
+    ? repository.reviews.edges.map((edge) => edge.node)
+    : [];
+
+  const ItemSeparator = () => <View style={styles.separator} />;
+
   return repository ? (
-    <View>
-      <RepositoryItem repository={repository}></RepositoryItem>
-    </View>
+    <FlatList
+      data={reviewNodes}
+      renderItem={({ item }) => <ReviewItem review={item} />}
+      keyExtractor={({ id }) => id}
+      ItemSeparatorComponent={ItemSeparator}
+      ListHeaderComponent={() => (
+        <>
+          <RepositoryItem repository={repository} />
+          <ItemSeparator></ItemSeparator>
+        </>
+      )}
+    />
   ) : (
     <View></View>
   );
 };
+
+export default RepositoryView;

@@ -42,6 +42,20 @@ export const GET_REPOSITORY = gql`
       stargazersCount
       url
       language
+      reviews {
+        edges {
+          node {
+            id
+            text
+            rating
+            createdAt
+            user {
+              username
+              id
+            }
+          }
+        }
+      }
     }
   }
 `;
